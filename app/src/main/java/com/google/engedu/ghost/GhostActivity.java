@@ -41,7 +41,7 @@ public class GhostActivity extends AppCompatActivity implements View.OnClickList
     public  TextView text,label;
     //private String userWordNew = null;
     private String computerWord = null;
-
+int whoEndFirst;
 
     String wordFragment;
     @Override
@@ -104,6 +104,8 @@ public class GhostActivity extends AppCompatActivity implements View.OnClickList
         userTurn = random.nextBoolean();
      //   text = (TextView) findViewById(R.id.ghostText);
         text.setText("");
+        wordFragment="";
+        whoEndFirst=userTurn?1:0;
         TextView label = (TextView) findViewById(R.id.gameStatus);
         if (userTurn) {
             label.setText(USER_TURN);
@@ -121,7 +123,7 @@ public class GhostActivity extends AppCompatActivity implements View.OnClickList
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-             computerWord=dictionary.getAnyWordStartingWith(wordFragment);
+             computerWord=dictionary.getGoodWordStartingWith(wordFragment,whoEndFirst);
 
                 if(computerWord=="noWord"){
                     createToast("computer wins",1000);
@@ -135,9 +137,11 @@ public class GhostActivity extends AppCompatActivity implements View.OnClickList
                 }
                 else
                 {
-                    if(wordFragment.equals(""))
+                    if(wordFragment==null || wordFragment=="")
                     {
-                        computerWord=computerWord.substring(0,1);
+                       // System.out.println("in the wordfragment"+wordFragment);
+                       // wordFragment="";
+                        wordFragment=computerWord.substring(0,1);
                     }
                     else{
                         wordFragment=computerWord.substring(0,wordFragment.length()+1);
@@ -210,7 +214,7 @@ public class GhostActivity extends AppCompatActivity implements View.OnClickList
             case R.id.challenge:
                   if(wordFragment.length()>=4)
                   {
-                      String finalWord=dictionary.getAnyWordStartingWith(wordFragment);
+                      String finalWord=dictionary.getGoodWordStartingWith(wordFragment,whoEndFirst);
                       if(finalWord.equals("noWord")){
                           createToast("you wins",3000);
                           onStart(null);
@@ -237,4 +241,5 @@ public class GhostActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
 }
